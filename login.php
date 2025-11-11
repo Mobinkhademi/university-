@@ -322,7 +322,7 @@ include("includes/conn.php");
     <!-- فرم ثبت‌نام -->
     <div class="form-box register" id="registerBox">
         <h3 class="form-title">ثبت‌نام دانشجو</h3>
-        <form id="registerForm" method="post" action="reg.php">
+        <form id="registerForm" method="post" action="reg.php" enctype="multipart/form-data">
             <div class="input-group">
                 <i class="input-icon" data-feather="user"></i>
                 <input type="text" id="firstName" name="name" placeholder=" " required>
@@ -351,6 +351,13 @@ include("includes/conn.php");
                 <input type="text" id="phone" name="phone" placeholder=" " required>
                 <label for="phone">شماره موبایل</label>
             </div>
+
+
+
+            <div class="input-group">
+                <input type="file" id="pic" name="pic" required>
+            </div>
+
             <button type="submit">ثبت‌نام</button>
         </form>
         <p class="switch-text">حساب دارید؟ <span class="switch-link" onclick="switchToLogin()">وارد شوید</span></p>

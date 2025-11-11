@@ -345,6 +345,28 @@ $username = $is_logged_in ? $_SESSION['username'] : '';
             .hero h2 { font-size: 2.5rem; }
             .hero p { font-size: 1.2rem; }
         }
+
+        /* دکمه خروج — هم‌رنگ با تم قرمز */
+        .btn-logout {
+            background: rgba(255,100,100,0.15) !important;
+            border: 2px solid #ff6666 !important;
+            color: #ff6666 !important;
+            padding: 8px 16px !important;
+            font-size: 0.9rem !important;
+            font-weight: 600;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(255,100,100,0.2);
+        }
+
+        .btn-logout:hover {
+            background: #ff6666 !important;
+            color: #0f0c29 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255,100,100,0.4);
+        }
+
     </style>
 </head>
 <body>
@@ -371,6 +393,7 @@ $username = $is_logged_in ? $_SESSION['username'] : '';
 
         <!-- اینجا شرط اصلی -->
         <?php if ($is_logged_in): ?>
+            <div style="display: flex; align-items: center; gap: 15px;">
             <!-- کاربر لاگین کرده → نمایش نام -->
             <div class="user-info">
                 <div class="user-icon">
@@ -378,6 +401,12 @@ $username = $is_logged_in ? $_SESSION['username'] : '';
                 </div>
                 <span>سلام، <?= htmlspecialchars($username) ?>!</span>
             </div>
+
+        <!-- دکمه خروج -->
+              <a href="logout.php" class="btn btn-login" style="background: rgba(255,100,100,0.15); border: 2px solid #ff6666; color: #ff6666; padding: 8px 16px; font-size: 0.9rem;">
+                خروج
+                 </a>
+                 </div>
         <?php else: ?>
             <!-- کاربر لاگین نکرده → نمایش دکمه -->
             <div class="auth-buttons">
