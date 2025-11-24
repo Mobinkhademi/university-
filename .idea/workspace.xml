@@ -4,16 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="09ae6fba-4a58-4f5d-8bf0-908a6bbe328b" name="Changes" comment="add file upload">
-      <change afterPath="$PROJECT_DIR$/svg/logo.svg" afterDir="false" />
+    <list default="true" id="09ae6fba-4a58-4f5d-8bf0-908a6bbe328b" name="Changes" comment="Adding a number of features">
+      <change afterPath="$PROJECT_DIR$/add_student.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AdminPanel.php" beforeDir="false" afterPath="$PROJECT_DIR$/AdminPanel.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/edit.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/includes/conn.php" beforeDir="false" afterPath="$PROJECT_DIR$/includes/conn.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reg.php" beforeDir="false" afterPath="$PROJECT_DIR$/reg.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/search.php" beforeDir="false" afterPath="$PROJECT_DIR$/search.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/validate.php" beforeDir="false" afterPath="$PROJECT_DIR$/validate.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -116,7 +110,8 @@
       <workItem from="1763477795611" duration="65000" />
       <workItem from="1763905202347" duration="20000" />
       <workItem from="1763906210564" duration="453000" />
-      <workItem from="1763971545072" duration="5796000" />
+      <workItem from="1763971545072" duration="6087000" />
+      <workItem from="1763999722278" duration="748000" />
     </task>
     <task id="LOCAL-00001" summary="final">
       <option name="closed" value="true" />
@@ -158,7 +153,15 @@
       <option name="project" value="LOCAL" />
       <updated>1762891629518</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Adding a number of features">
+      <option name="closed" value="true" />
+      <created>1763977564471</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1763977564472</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -179,6 +182,7 @@
     <MESSAGE value="final" />
     <MESSAGE value="final fixed bug" />
     <MESSAGE value="add file upload" />
-    <option name="LAST_COMMIT_MESSAGE" value="add file upload" />
+    <MESSAGE value="Adding a number of features" />
+    <option name="LAST_COMMIT_MESSAGE" value="Adding a number of features" />
   </component>
 </project>
