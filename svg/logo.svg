@@ -1,0 +1,40 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+    <!-- پس‌زمینه شفاف -->
+    <defs>
+        <filter id="glow">
+            <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+            <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+        <filter id="inner-glow">
+            <feGaussianBlur stdDeviation="4" result="blur"/>
+            <feOffset in="blur" dx="0" dy="0"/>
+            <feComposite in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1"/>
+        </filter>
+    </defs>
+
+    <!-- حلقه خارجی با گلو نئونی چرخان -->
+    <circle cx="256" cy="256" r="230" fill="none" stroke="#00ffff" stroke-width="12"
+            filter="url(#glow)" opacity="0.8">
+        <animateTransform attributeName="transform" type="rotate" from="0 256 256" to="360 256 256" dur="20s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="256" cy="256" r="220" fill="none" stroke="#00aaff" stroke-width="8" opacity="0.6"/>
+
+    <!-- دایره داخلی -->
+    <circle cx="256" cy="256" r="160" fill="rgba(0,20,40,0.8)" stroke="#00ffff" stroke-width="6"
+            filter="url(#glow)"/>
+
+    <!-- حروف UT با افکت نئون قوی -->
+    <text x="256" y="300" font-family="Arial, Helvetica, sans-serif" font-size="220"
+          font-weight="900" text-anchor="middle" fill="#00ffff"
+          filter="url(#glow)" stroke="#00ffff" stroke-width="3">
+        <tspan filter="url(#glow)">U</tspan>
+        <tspan x="256" dy="0">T</tspan>
+    </text>
+
+    <!-- افکت داخلی درخشان -->
+    <circle cx="256" cy="256" r="100" fill="none" stroke="#00ffff" stroke-width="4" opacity="0.4"
+            filter="url(#inner-glow)"/>
+</svg>

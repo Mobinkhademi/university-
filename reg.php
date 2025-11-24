@@ -6,6 +6,7 @@ $lastname = $_POST["lastname"];
 $phone = $_POST["phone"];
 $username = $_POST["username"];
 $password = $_POST["password"];
+$hashedpassword =  password_hash($password, PASSWORD_DEFAULT);
 
 
 $num = random_int(1000, 9999);
@@ -28,9 +29,10 @@ if ($size <= 20 && !empty($filename)) {
 
     $sqlins = "INSERT INTO `students`
                (`student_id`, `name`, `family`, `phone`, `username`, `password`, `pic`)
-               VALUES ('$student_id', '$name', '$lastname', '$phone', '$username', '$password', '$newFilename')";
+               VALUES (?,?,?,?,?,?,?)";
 
-    mysqli_query($mysqli, $sqlins);
+    $result=$mysqli->prepare($sqlins);
+    $result->bind_param("issssss", $student_id, $name, $lastname, $phone, $username, $hashedpassword, $newFilename);
     header("Location: login.php");
     exit;
 } else { ?>

@@ -1,7 +1,8 @@
 <?php
 include("includes/conn.php");
 $sql = "SELECT * FROM students ";
-$result = mysqli_query($mysqli, $sql);
+$result = $mysqli ->query($sql);
+
 
 
 ?>
@@ -429,7 +430,7 @@ $result = mysqli_query($mysqli, $sql);
             </tr>
             </thead>
             <tbody>
-            <?php while ($row = mysqli_fetch_assoc($result)) {?>
+            <?php while ($row = $result->fetch_assoc()) {?>
             <tr>
                 <td><?= $row['id'];?></td>
                 <td><?= $row['name']; ?></td>

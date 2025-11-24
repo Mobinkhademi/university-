@@ -1,45 +1,69 @@
 <?php
+session_start();
 include("includes/conn.php");
-$num = $_GET['num'] ?? '';
-$message = '';
 
-// --- حذف کاربر ---
+// دریافت شماره دانشجویی
+$num = trim($_GET['num'] ?? '');
+
+// پیام‌های موقت (فلش مسیج)
+$message = $_SESSION['message'] ?? '';
+unset($_SESSION['message']);
+
+// ──────── حذف امن ────────
 if (isset($_GET['delete_id'])) {
     $delete_id = (int)$_GET['delete_id'];
-    $sqldel = "DELETE FROM students WHERE id = $delete_id";
-    mysqli_query($mysqli, $sqldel);
-    $message = "<div class='success'>کاربر با موفقیت حذف شد.</div>";
+
+    if ($delete_id > 0) {
+        $stmt = $mysqli->prepare("DELETE FROM students WHERE id = ? LIMIT 1");
+        $stmt->bind_param("i", $delete_id);
+        if ($stmt->execute() && $stmt->affected_rows > 0) {
+            $_SESSION['message'] = "<div class='success'>کاربر با موفقیت حذف شد.</div>";
+        } else {
+            $_SESSION['message'] = "<div class='error'>کاربر یافت نشد یا قبلاً حذف شده است.</div>";
+        }
+        $stmt->close();
+    } else {
+        $_SESSION['message'] = "<div class='error'>شناسه نامعتبر است.</div>";
+    }
+
     header("Location: search.php?num=" . urlencode($num));
     exit;
 }
 
-// --- ویرایش کاربر ---
+// ──────── ویرایش امن ────────
 if ($_POST && isset($_POST['edit_id'])) {
-    $edit_id = (int)$_POST['edit_id'];
-    $name = mysqli_real_escape_string($mysqli, trim($_POST['name']));
-    $family = mysqli_real_escape_string($mysqli, trim($_POST['family']));
-    $phone = mysqli_real_escape_string($mysqli, trim($_POST['phone']));
-    $student_id = mysqli_real_escape_string($mysqli, trim($_POST['student_id']));
+    $edit_id     = (int)$_POST['edit_id'];
+    $name        = trim($_POST['name']);
+    $family      = trim($_POST['family']);
+    $phone       = trim($_POST['phone']);
+    $student_id  = trim($_POST['student_id']);
 
-    $sqlup = "UPDATE students SET 
-              name='$name', 
-              family='$family', 
-              phone='$phone', 
-              student_id='$student_id' 
-              WHERE id=$edit_id";
-    mysqli_query($mysqli, $sqlup);
+    if ($edit_id > 0 && !empty($name) && !empty($family)) {
+        $stmt = $mysqli->prepare("UPDATE students SET name=?, family=?, phone=?, student_id=? WHERE id = ?");
+        $stmt->bind_param("ssssi", $name, $family, $phone, $student_id, $edit_id);
 
-    $message = "<div class='success'>کاربر با موفقیت ویرایش شد.</div>";
+        if ($stmt->execute()) {
+            $_SESSION['message'] = "<div class='success'>کاربر با موفقیت ویرایش شد.</div>";
+        } else {
+            $_SESSION['message'] = "<div class='error'>خطا در ویرایش کاربر.</div>";
+        }
+        $stmt->close();
+    } else {
+        $_SESSION['message'] = "<div class='error'>اطلاعات ناقص یا نامعتبر است.</div>";
+    }
+
     header("Location: search.php?num=" . urlencode($num));
     exit;
 }
 
-// --- جستجو ---
+// ──────── جستجوی امن ────────
 $result = null;
 if (!empty($num)) {
-    $num_escaped = mysqli_real_escape_string($mysqli, $num);
-    $sqlsel = "SELECT * FROM students WHERE student_id LIKE '%$num_escaped%'";
-    $result = mysqli_query($mysqli, $sqlsel);
+    $stmt = $mysqli->prepare("SELECT * FROM students WHERE student_id LIKE ?");
+    $like = "%$num%";
+    $stmt->bind_param("s", $like);
+    $stmt->execute();
+    $result = $stmt->get_result();
 }
 ?>
 
@@ -51,7 +75,6 @@ if (!empty($num)) {
         <title>نتایج جستجو برای: <?= htmlspecialchars($num) ?></title>
         <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet">
         <style>
-            /* استایل شما بدون تغییر */
             * { margin: 0; padding: 0; box-sizing: border-box; }
             body { font-family: 'Vazirmatn', sans-serif; background: linear-gradient(135deg, #0f0c29 0%, #1a1a2e 50%, #302b63 100%); color: #e0f7ff; min-height: 100vh; padding: 40px 20px; position: relative; }
             body::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 20% 30%, rgba(0,212,255,0.15), transparent 60%), radial-gradient(circle at 80% 70%, rgba(0,255,255,0.1), transparent 60%); z-index: -1; animation: pulse 8s infinite alternate; }
@@ -67,8 +90,8 @@ if (!empty($num)) {
             th { background: rgba(0,212,255,0.1); color: #00ffff; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.95rem; }
             tr:hover td { background: rgba(0,212,255,0.08); }
             .actions { display: flex; gap: 10px; justify-content: center; }
-            .edit-btn, .delete-btn { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-            .edit-btn { background: rgba(0,212,255,0.15); color: #00d4ff; border: 1px solid rgba(0,212,255,0.3); }
+            .edit-btn, .delete-btn { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.2);  }
+            .edit-btn { background: rgba(0,212,255,0.15); color: #00d4ff; border: 1px solid rgba(0,212,255,0.3);font-size: 13px}
             .edit-btn:hover { background: #00d4ff; color: #0f0c29; transform: translateY(-2px) scale(1.1); box-shadow: 0 8px 20px rgba(0,212,255,0.5); }
             .delete-btn { background: rgba(255,100,100,0.15); color: #ff6666; border: 1px solid rgba(255,100,100,0.3); }
             .delete-btn:hover { background: #ff6666; color: #0f0c29; transform: translateY(-2px) scale(1.1); box-shadow: 0 8px 20px rgba(255,100,100,0.5); }
@@ -79,17 +102,23 @@ if (!empty($num)) {
             .back-btn { display: block; width: fit-content; margin: 30px auto 0; padding: 14px 32px; background: #00d4ff; color: #0f0c29; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; text-transform: uppercase; box-shadow: 0 6px 20px rgba(0,212,255,0.4); }
             .back-btn:hover { background: #00ffff; transform: translateY(-3px); box-shadow: 0 12px 25px rgba(0,212,255,0.5); }
             @media (max-width: 768px) { .container { padding: 25px; } th, td { padding: 12px 8px; font-size: 0.9rem; } .edit-form input { padding: 8px; } }
+            *{margin:0;padding:0;box-sizing:border-box}
+            body{font-family:'Vazirmatn',sans-serif;background:linear-gradient(135deg,#0f0c29 0%,#1a1a2e 50%,#302b63 100%);color:#e0f7ff;min-height:100vh;padding:40px 20px;position:relative}
+
+            .success{background:rgba(0,212,255,0.1);border:1px solid #00d4ff;color:#00ffff;padding:12px;border-radius:12px;text-align:center;margin:15px 0}
+            .error{background:rgba(255,50,50,0.1);border:1px dashed #ff6666;color:#ff9999;padding:15px;border-radius:12px;text-align:center;margin:15px 0}
         </style>
     </head>
     <body>
     <div class="container">
         <h2>نتایج جستجو برای: "<?= htmlspecialchars($num) ?>"</h2>
+
         <?= $message ?>
 
         <?php if (empty($num)): ?>
             <p class="error">لطفاً شماره دانشجویی را وارد کنید.</p>
 
-        <?php elseif (isset($result) && mysqli_num_rows($result) > 0): ?>
+        <?php elseif ($result && $result->num_rows > 0): ?>
             <table>
                 <thead>
                 <tr>
@@ -102,7 +131,7 @@ if (!empty($num)) {
                 </tr>
                 </thead>
                 <tbody>
-                <?php while ($user = mysqli_fetch_assoc($result)): ?>
+                <?php while ($user = $result->fetch_assoc()): ?>
                     <tr>
                         <td><?= htmlspecialchars($user['id']) ?></td>
                         <td><?= htmlspecialchars($user['name']) ?></td>
@@ -110,27 +139,20 @@ if (!empty($num)) {
                         <td><?= htmlspecialchars($user['phone']) ?></td>
                         <td><?= htmlspecialchars($user['student_id']) ?></td>
                         <td class="actions">
-                            <!-- ویرایش -->
-                            <form action="" method="GET" style="display:inline;">
-                                <input type="hidden" name="num" value="<?= htmlspecialchars($num) ?>">
-                                <input type="hidden" name="edit_id" value="<?= $user['id'] ?>">
-                                <button type="submit" class="edit-btn" title="ویرایش">
-                                    <i data-feather="edit"></i>
-                                </button>
-                            </form>
+                            <!-- دکمه ویرایش (فقط باز کردن فرم) -->
+                            <a href="search.php?num=<?= urlencode($num) ?>&edit_id=<?= $user['id'] ?>#editform"
+                               class="edit-btn" title="ویرایش">ویرایش</a>
 
-                            <!-- حذف -->
+                            <!-- حذف با تأیید -->
                             <a href="search.php?num=<?= urlencode($num) ?>&delete_id=<?= $user['id'] ?>"
                                class="delete-btn" title="حذف"
-                               onclick="return confirm('آیا از حذف این کاربر مطمئن هستید؟');">
-                                <i data-feather="trash-2"></i>
-                            </a>
+                               onclick="return confirm('آیا از حذف این کاربر مطمئن هستید؟');">حذف</a>
                         </td>
                     </tr>
 
-                    <!-- فرم ویرایش -->
-                    <?php if (isset($_GET['edit_id']) && $_GET['edit_id'] == $user['id']): ?>
-                        <tr>
+                    <!-- فرم ویرایش (فقط وقتی edit_id با این ردیف برابر باشد) -->
+                    <?php if (isset($_GET['edit_id']) && (int)$_GET['edit_id'] === $user['id']): ?>
+                        <tr id="editform">
                             <td colspan="6">
                                 <form action="" method="POST" class="edit-form">
                                     <input type="hidden" name="edit_id" value="<?= $user['id'] ?>">
@@ -139,8 +161,8 @@ if (!empty($num)) {
                                     <input type="text" name="family" value="<?= htmlspecialchars($user['family']) ?>" required placeholder="نام خانوادگی">
                                     <input type="text" name="phone" value="<?= htmlspecialchars($user['phone']) ?>" required placeholder="شماره">
                                     <input type="text" name="student_id" value="<?= htmlspecialchars($user['student_id']) ?>" required placeholder="شماره دانشجویی">
-                                    <button type="submit">ذخیره</button>
-                                    <a href="search.php?num=<?= urlencode($num) ?>" style="color:#ff6666; margin-right:10px;">لغو</a>
+                                    <button type="submit">ذخیره تغییرات</button>
+                                    <a href="search.php?num=<?= urlencode($num) ?>" style="color:#ff6666;margin-right:10px;">لغو</a>
                                 </form>
                             </td>
                         </tr>

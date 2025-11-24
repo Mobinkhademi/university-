@@ -5,8 +5,8 @@ $user = null;
 $sql = "SELECT * FROM students WHERE id = ?";
 
 if ($id > 0) {
-    $resualt = mysqli_query($mysqli, $sql);
-    $user = mysqli_fetch_assoc($resualt);
+    $resualt = $mysqli->query( $sql);
+    $user = $mysqli->fetch_assoc($resualt);
 }
 
 if (!$user) {
@@ -43,8 +43,8 @@ if (!$user) {
         <input type="text" name="phone" value="<?= htmlspecialchars($user['phone']) ?>" required placeholder="شماره تماس">
         <input type="text" name="student_id" value="<?= htmlspecialchars($user['student_id']) ?>" required placeholder="شماره دانشجویی">
         <button type="submit">ذخیره تغییرات</button>
-    </form>
-    <button onclick="history.back()" class="back">بازگشت</button>
+    </form>0
+    <a href="AdminPanel.php"><button onclick="history.back()" class="back">بازگشت</button></a>
 </div>
 </body>
 </html>
